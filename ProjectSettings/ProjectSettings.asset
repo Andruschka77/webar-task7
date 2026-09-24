@@ -141,6 +141,7 @@ PlayerSettings:
   tvOSBundleVersion: 1.0
   bundleVersion: 1.0
   preloadedAssets:
+  - {fileID: 11400000, guid: faf971756b9df2442b41568c695c8d62, type: 2}
   - {fileID: 2439202126899126047, guid: ff10272c77e31d846ad38fe9317c33ee, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -553,7 +554,7 @@ PlayerSettings:
   webGLTemplate: APPLICATION:Default
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
-  webGLCompressionFormat: 1
+  webGLCompressionFormat: 2
   webGLWasmArithmeticExceptions: 0
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0

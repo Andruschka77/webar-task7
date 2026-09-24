@@ -8,4 +8,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ARScene.unity
     guid: a5a9d25337422174aa520e8802b7db1f
-  m_configObjects: {}
+  m_configObjects:
+    WebXR.Settings: {fileID: 11400000, guid: faf971756b9df2442b41568c695c8d62, type: 2}

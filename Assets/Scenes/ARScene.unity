@@ -267,27 +267,13 @@ PrefabInstance:
       addedObject: {fileID: 667192459}
     - targetCorrespondingSourceObject: {fileID: 8362309011548659104, guid: 67541c9d1fd5e2c4798986ee73c07923, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 667192458}
+      addedObject: {fileID: 667192465}
   m_SourcePrefab: {fileID: 100100000, guid: 67541c9d1fd5e2c4798986ee73c07923, type: 3}
 --- !u!1 &667192457 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8362309011548659104, guid: 67541c9d1fd5e2c4798986ee73c07923, type: 3}
   m_PrefabInstance: {fileID: 667192456}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &667192458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 667192457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9728b329c3fb305489f7456a80b22634, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverColor: {r: 0, g: 1, b: 1, a: 1}
-  grabColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &667192459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,6 +453,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &667192465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667192457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9728b329c3fb305489f7456a80b22634, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverColor: {r: 0, g: 1, b: 1, a: 1}
+  grabColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
