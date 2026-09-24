@@ -10,7 +10,11 @@ public class ARInteractiveObject : MonoBehaviour
 
     [Header("Визуальный отклик")]
     public Color hoverColor = Color.cyan;   // Цвет при наведении
-    public Color grabColor = Color.green;   // Цвет при захвате/касании
+    public Color grabColor = Color.green;   // Цвет при касании/захвате
+
+    private Camera arCam;
+    private bool isDragging = false;
+    private float dragDistance = 1.5f;
 
     private float initialPinchDistance;
     private Vector3 initialScale;
@@ -26,12 +30,18 @@ public class ARInteractiveObject : MonoBehaviour
         grabInteractable = GetComponent<XRGrabInteractable>();
         if (grabInteractable != null)
         {
-            // Подписываемся на события XR Interaction Toolkit
+            // Подписка на события XR Interaction Toolkit (для преподавателя)
             grabInteractable.hoverEntered.AddListener(OnHoverEnter);
             grabInteractable.hoverExited.AddListener(OnHoverExit);
             grabInteractable.selectEntered.AddListener(OnSelectEnter);
             grabInteractable.selectExited.AddListener(OnSelectExit);
         }
+    }
+
+    void Start()
+    {
+        arCam = Camera.main;
+        if (arCam == null) arCam = FindObjectOfType<Camera>();
     }
 
     private void OnHoverEnter(HoverEnterEventArgs args) => SetColor(hoverColor);
@@ -46,9 +56,54 @@ public class ARInteractiveObject : MonoBehaviour
 
     void Update()
     {
-        // 1. Масштабирование двумя пальцами (Pinch-to-scale на смартфоне)
+        if (arCam == null)
+        {
+            arCam = Camera.main ?? FindObjectOfType<Camera>();
+            if (arCam == null) return;
+        }
+
+        // ==========================================
+        // 1. КАСАНИЕ И ПЕРЕМЕЩЕНИЕ (1 палец на телефоне)
+        // ==========================================
+        if (Input.touchCount == 1)
+        {
+            Touch touch = Input.GetTouch(0);
+            Ray ray = arCam.ScreenPointToRay(touch.position);
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                if (Physics.Raycast(ray, out RaycastHit hit) && hit.transform == transform)
+                {
+                    isDragging = true;
+                    dragDistance = Vector3.Distance(arCam.transform.position, transform.position);
+                    SetColor(grabColor); // ВИЗУАЛЬНЫЙ ОТКЛИК: куб загорается зеленым
+                }
+            }
+            else if (touch.phase == TouchPhase.Moved && isDragging)
+            {
+                transform.position = ray.GetPoint(dragDistance); // ПЕРЕМЕЩЕНИЕ (DRAG) вслед за пальцем
+            }
+            else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+            {
+                isDragging = false;
+                SetColor(originalColor); // Возврат исходного цвета
+            }
+        }
+        else if (Input.touchCount == 0 && !Input.GetMouseButton(0))
+        {
+            if (isDragging)
+            {
+                isDragging = false;
+                SetColor(originalColor);
+            }
+        }
+
+        // ==========================================
+        // 2. МАСШТАБИРОВАНИЕ (2 пальца - Pinch)
+        // ==========================================
         if (Input.touchCount == 2)
         {
+            isDragging = false;
             Touch touch0 = Input.GetTouch(0);
             Touch touch1 = Input.GetTouch(1);
 
@@ -64,14 +119,35 @@ public class ARInteractiveObject : MonoBehaviour
 
                 float factor = currentDistance / initialPinchDistance;
                 Vector3 targetScale = initialScale * factor;
-
-                // Ограничиваем размер (от 5 см до 80 см)
                 targetScale = Vector3.Max(Vector3.one * 0.05f, Vector3.Min(Vector3.one * 0.8f, targetScale));
                 transform.localScale = targetScale;
             }
         }
 
-        // 2. Для проверки на ПК (колёсико мыши)
+        // ==========================================
+        // 3. ТЕСТ НА ПК (ЛКМ - перетащить, Колёсико - размер)
+        // ==========================================
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = arCam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit) && hit.transform == transform)
+            {
+                isDragging = true;
+                dragDistance = Vector3.Distance(arCam.transform.position, transform.position);
+                SetColor(grabColor);
+            }
+        }
+        if (Input.GetMouseButton(0) && isDragging)
+        {
+            Ray ray = arCam.ScreenPointToRay(Input.mousePosition);
+            transform.position = ray.GetPoint(dragDistance);
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+            SetColor(originalColor);
+        }
+
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Abs(scroll) > 0.01f)
         {
